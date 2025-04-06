@@ -16,7 +16,6 @@ sub entry {
 }
 	
 entry("fork");
-entry("exit");
 entry("wait");
 entry("pipe");
 entry("read");
@@ -36,3 +35,6 @@ entry("getpid");
 entry("sbrk");
 entry("sleep");
 entry("uptime");
+entry("memsize");
+entry("exit");
+entry("exit2");

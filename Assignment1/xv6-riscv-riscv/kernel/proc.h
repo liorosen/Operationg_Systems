@@ -27,7 +27,7 @@ struct cpu {
 };
 
 extern struct cpu cpus[NCPU];
-
+int wait(uint64 addr, uint64 msg_addr);
 // per-process data for the trap handling code in trampoline.S.
 // sits in a page by itself just under the trampoline page in the
 // user page table. not specially mapped in the kernel page table.
@@ -84,6 +84,7 @@ enum procstate { UNUSED, USED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 // Per-process state
 struct proc {
   struct spinlock lock;
+  char exit_msg[32];  // הודעת יציאה
 
   // p->lock must be held when using these:
   enum procstate state;        // Process state

@@ -116,6 +116,10 @@ mkfs/mkfs: mkfs/mkfs.c $K/fs.h $K/param.h
 .PRECIOUS: %.o
 
 UPROGS=\
+	$U/_goodbye\
+	$U/_memsize_test\
+	$U/_memsize\
+	$U/_helloworld\
 	$U/_cat\
 	$U/_echo\
 	$U/_forktest\

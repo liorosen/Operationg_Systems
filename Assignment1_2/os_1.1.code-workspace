@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"uri": "vscode-remote://codespaces+potential-adventure-4pvg9vwwqgpfjvw/workspaces/os_1.1"
+		}
+	],
+	"remoteAuthority": "codespaces+potential-adventure-4pvg9vwwqgpfjvw",
+	"settings": {
+		"files.associations": {
+			"types.h": "c",
+			"riscv.h": "c",
+			"defs.h": "c"
+		}
+	}
+}

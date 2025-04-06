@@ -166,8 +166,14 @@ main(void)
       continue;
     }
     if(fork1() == 0)
-      runcmd(parsecmd(buf));
-    wait(0);
+  runcmd(parsecmd(buf));
+
+    int status;
+    char msg[32] = {0};
+
+    if(wait(&status, msg) > 0) {
+      printf("exit message: %s\n", msg);
+    }
   }
   exit(0);
 }

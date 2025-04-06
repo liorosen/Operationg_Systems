@@ -7,12 +7,38 @@
 #include "proc.h"
 
 uint64
+sys_memsize(void)
+{
+  struct proc *p = myproc(); // קבל את התהליך הנוכחי
+  return p->sz; 
+}
+
+uint64
 sys_exit(void)
 {
-  int n;
-  argint(0, &n);
-  exit(n);
-  return 0;  // not reached
+  int status;
+  char msg[32] = {0};
+
+  argint(0, &status); 
+  argstr(1, msg, sizeof(msg)); // ארגומנט 2: הודעת יציאה
+
+  struct proc *p = myproc();
+  strncpy(p->exit_msg, msg, sizeof(p->exit_msg)); // שמור בהודעת יציאה
+  p->exit_msg[31] = '\0'; // ודא סיום תקין
+
+  exit(status); 
+  return 0;     
+}
+
+
+uint64
+sys_exit2(void)
+{
+  int status;
+  argint(0, &status);
+  argstr(1, myproc()->exit_msg, 32);  // copy exit message directly
+  exit(status);
+  return 0; // not reached
 }
 
 uint64
@@ -30,9 +56,11 @@ sys_fork(void)
 uint64
 sys_wait(void)
 {
-  uint64 p;
-  argaddr(0, &p);
-  return wait(p);
+  uint64 status_addr;
+  uint64 msg_addr;
+  argaddr(0, &status_addr);
+  argaddr(1, &msg_addr);
+  return wait(status_addr, msg_addr);
 }
 
 uint64
