@@ -7,9 +7,6 @@
 #include "proc.h"
 #include "syscall.h"
 
-// extern int forkn(int, int*);
-// extern int waitall(int*, int*);
-
 // Add function declarations
 extern struct proc* allocproc(void);
 extern void freeproc(struct proc *p);
@@ -51,30 +48,15 @@ uint64 sys_fork(void)
   return fork();
 }
 
-/*
-uint64
-sys_wait(void)
-{
-  uint64 p;
-  argaddr(0, &p);
-  return wait(p);
-}
-*/
-uint64 sys_wait(void)
-{
+uint64 sys_wait(void){
   uint64 status_addr;
   uint64 msg_addr;
 
   argaddr(0, &status_addr);
   argaddr(1, &msg_addr);
 
-
-  //if (argaddr(0, &status_addr) < 0 || argaddr(1, &msg_addr) < 0)
-    //return -1;
-
   return wait(status_addr, msg_addr);
-}
-
+} 
 
 uint64 sys_sbrk(void)
 {

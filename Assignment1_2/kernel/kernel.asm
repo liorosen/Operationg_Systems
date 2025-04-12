@@ -5306,7 +5306,8 @@ void procdump(void)
 00000000800026ac <forkn>:
 
 // Question 4 added
-int forkn(int n, int *pids) {
+ //the correct
+ int forkn(int n, int *pids) {
     800026ac:	7119                	addi	sp,sp,-128
     800026ae:	fc86                	sd	ra,120(sp)
     800026b0:	f8a2                	sd	s0,112(sp)
@@ -5389,11 +5390,11 @@ int forkn(int n, int *pids) {
     80002744:	55e080e7          	jalr	1374(ra) # 80000c9e <release>
       return -1;
     80002748:	557d                	li	a0,-1
-
     printf("Successfully created child process %d with PID %d\n", i, np->pid);
   }
 
-  return 0; // parent returns 0
+  return 0; // Parent process will receive 0
+
 }
     8000274a:	70e6                	ld	ra,120(sp)
     8000274c:	7446                	ld	s0,112(sp)
@@ -5502,7 +5503,7 @@ int forkn(int n, int *pids) {
     80002854:	0777b823          	sd	s7,112(a5)
     80002858:	0d000493          	li	s1,208
     8000285c:	b705                	j	8000277c <forkn+0xd0>
-  return 0; // parent returns 0
+  return 0; // Parent process will receive 0
     8000285e:	4501                	li	a0,0
     80002860:	b5ed                	j	8000274a <forkn+0x9e>
     return -1;
@@ -5513,6 +5514,7 @@ int forkn(int n, int *pids) {
     80002868:	b5cd                	j	8000274a <forkn+0x9e>
 
 000000008000286a <waitall>:
+
 
 int waitall(int *n, int *statuses) {
     8000286a:	7149                	addi	sp,sp,-368
@@ -6574,12 +6576,8 @@ uint64 sys_fork(void)
     80003006:	8082                	ret
 
 0000000080003008 <sys_wait>:
-  argaddr(0, &p);
-  return wait(p);
-}
-*/
-uint64 sys_wait(void)
-{
+
+uint64 sys_wait(void){
     80003008:	1101                	addi	sp,sp,-32
     8000300a:	ec06                	sd	ra,24(sp)
     8000300c:	e822                	sd	s0,16(sp)
@@ -6598,23 +6596,18 @@ uint64 sys_wait(void)
     80003024:	00000097          	auipc	ra,0x0
     80003028:	e88080e7          	jalr	-376(ra) # 80002eac <argaddr>
 
-
-  //if (argaddr(0, &status_addr) < 0 || argaddr(1, &msg_addr) < 0)
-    //return -1;
-
   return wait(status_addr, msg_addr);
     8000302c:	fe043583          	ld	a1,-32(s0)
     80003030:	fe843503          	ld	a0,-24(s0)
     80003034:	fffff097          	auipc	ra,0xfffff
     80003038:	38a080e7          	jalr	906(ra) # 800023be <wait>
-}
+} 
     8000303c:	60e2                	ld	ra,24(sp)
     8000303e:	6442                	ld	s0,16(sp)
     80003040:	6105                	addi	sp,sp,32
     80003042:	8082                	ret
 
 0000000080003044 <sys_sbrk>:
-
 
 uint64 sys_sbrk(void)
 {

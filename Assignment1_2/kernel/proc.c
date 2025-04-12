@@ -331,7 +331,7 @@ reparent(struct proc *p)
 
 
   //I changed
-  void exit(char *msg)
+ void exit(char *msg)
 {
   struct proc *p = myproc();
 
@@ -377,7 +377,8 @@ reparent(struct proc *p)
   panic("zombie exit");
 }
 
-//I added
+
+//corrected I added
 void exit_num(int status){
   struct proc *p = myproc();
   p->xstatus = status;
@@ -394,74 +395,9 @@ void exit_msg(char *msg)
   p->exit_msg[sizeof(p->exit_msg)-1] = '\0';
   exit("Goodbye World xv6");
   
-  
-
-  /*
-  struct proc *p = myproc();
-  safestrcpy(p->exit_msg, msg, sizeof(p->exit_msg));  
-  exit_num(0);
-  */
-  /*
-  struct proc *p = myproc();
-  safestrcpy(p->exit_msg, msg, sizeof(p->exit_msg));
-  exit_num(0);
-  */
 }
-
-
-// Wait for a child process to exit and return its pid.
-// Return -1 if this process has no children.
-/*
-int
-wait(uint64 addr)
-{
-  struct proc *pp;
-  int havekids, pid;
-  struct proc *p = myproc();
-
-  acquire(&wait_lock);
-
-  for(;;){
-    // Scan through table looking for exited children.
-    havekids = 0;
-    for(pp = proc; pp < &proc[NPROC]; pp++){
-      if(pp->parent == p){
-        // make sure the child isn't still in exit() or swtch().
-        acquire(&pp->lock);
-
-        havekids = 1;
-        if(pp->state == ZOMBIE){
-          // Found one.
-          pid = pp->pid;
-          if(addr != 0 && copyout(p->pagetable, addr, (char *)&pp->xstate,
-                                  sizeof(pp->xstate)) < 0) {
-            release(&pp->lock);
-            release(&wait_lock);
-            return -1;
-          }
-          freeproc(pp);
-          release(&pp->lock);
-          release(&wait_lock);
-          return pid;
-        }
-        release(&pp->lock);
-      }
-    }
-
-    // No point waiting if we don't have any children.
-    if(!havekids || killed(p)){
-      release(&wait_lock);
-      return -1;
-    }
-    
-    // Wait for a child to exit.
-    sleep(p, &wait_lock);  //DOC: wait-sleep
-  }
-}
-*/
 
 //I added
-
 int wait(uint64 addr, uint64 msg_addr)
 {
   struct proc *pp;
@@ -522,6 +458,9 @@ int wait(uint64 addr, uint64 msg_addr)
     sleep(p, &wait_lock);  //DOC: wait-sleep
   }
 }
+
+
+
 
 
 // Per-CPU process scheduler.
@@ -761,7 +700,8 @@ void procdump(void)
 }
 
 // Question 4 added
-int forkn(int n, int *pids) {
+ //the correct
+ int forkn(int n, int *pids) {
   struct proc *p = myproc();
   struct proc *np;
   int i;
@@ -807,8 +747,10 @@ int forkn(int n, int *pids) {
     printf("Successfully created child process %d with PID %d\n", i, np->pid);
   }
 
-  return 0; // parent returns 0
+  return 0; // Parent process will receive 0
+
 }
+
 
 int waitall(int *n, int *statuses) {
   struct proc *p = myproc();
@@ -847,4 +789,5 @@ int waitall(int *n, int *statuses) {
 
   return 0;
 }
+
 
