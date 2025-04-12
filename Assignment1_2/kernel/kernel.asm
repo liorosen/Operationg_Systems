@@ -3732,7 +3732,7 @@ void forkret(void)
 
   if (first) {
     80001a16:	00007797          	auipc	a5,0x7
-    80001a1a:	eaa7a783          	lw	a5,-342(a5) # 800088c0 <first.1702>
+    80001a1a:	eaa7a783          	lw	a5,-342(a5) # 800088c0 <first.1713>
     80001a1e:	eb89                	bnez	a5,80001a30 <forkret+0x32>
     // be run from main().
     first = 0;
@@ -3749,7 +3749,7 @@ void forkret(void)
     80001a2e:	8082                	ret
     first = 0;
     80001a30:	00007797          	auipc	a5,0x7
-    80001a34:	e807a823          	sw	zero,-368(a5) # 800088c0 <first.1702>
+    80001a34:	e807a823          	sw	zero,-368(a5) # 800088c0 <first.1713>
     fsinit(ROOTDEV);
     80001a38:	4505                	li	a0,1
     80001a3a:	00002097          	auipc	ra,0x2
@@ -5258,7 +5258,7 @@ void procdump(void)
     8000264a:	a82a0a13          	addi	s4,s4,-1406 # 800080c8 <digits+0x88>
     if(p->state >= 0 && p->state < NELEM(states) && states[p->state])
     8000264e:	00006b97          	auipc	s7,0x6
-    80002652:	cdab8b93          	addi	s7,s7,-806 # 80008328 <states.1746>
+    80002652:	cdab8b93          	addi	s7,s7,-806 # 80008328 <states.1757>
     80002656:	a00d                	j	80002678 <procdump+0x7a>
     printf("%d %s %s", p->pid, state, p->name);
     80002658:	ed86a583          	lw	a1,-296(a3)
@@ -5597,14 +5597,14 @@ int waitall(int *n, int *statuses) {
     80002904:	97ba                	add	a5,a5,a4
     80002906:	54d8                	lw	a4,44(s1)
     80002908:	eee7ac23          	sw	a4,-264(a5)
-        freeproc(pp);
-    8000290c:	8526                	mv	a0,s1
-    8000290e:	fffff097          	auipc	ra,0xfffff
-    80002912:	26a080e7          	jalr	618(ra) # 80001b78 <freeproc>
         release(&pp->lock);
+    8000290c:	8526                	mv	a0,s1
+    8000290e:	ffffe097          	auipc	ra,0xffffe
+    80002912:	390080e7          	jalr	912(ra) # 80000c9e <release>
+        freeproc(pp);
     80002916:	8526                	mv	a0,s1
-    80002918:	ffffe097          	auipc	ra,0xffffe
-    8000291c:	386080e7          	jalr	902(ra) # 80000c9e <release>
+    80002918:	fffff097          	auipc	ra,0xfffff
+    8000291c:	260080e7          	jalr	608(ra) # 80001b78 <freeproc>
         found = 1;
     80002920:	8ada                	mv	s5,s6
         continue;
@@ -5713,7 +5713,7 @@ trapinit(void)
     80002a16:	0800                	addi	s0,sp,16
   initlock(&tickslock, "time");
     80002a18:	00006597          	auipc	a1,0x6
-    80002a1c:	94058593          	addi	a1,a1,-1728 # 80008358 <states.1746+0x30>
+    80002a1c:	94058593          	addi	a1,a1,-1728 # 80008358 <states.1757+0x30>
     80002a20:	00014517          	auipc	a0,0x14
     80002a24:	7c050513          	addi	a0,a0,1984 # 800171e0 <tickslock>
     80002a28:	ffffe097          	auipc	ra,0xffffe
@@ -5954,7 +5954,7 @@ devintr()
       printf("unexpected interrupt irq=%d\n", irq);
     80002b78:	85a6                	mv	a1,s1
     80002b7a:	00005517          	auipc	a0,0x5
-    80002b7e:	7e650513          	addi	a0,a0,2022 # 80008360 <states.1746+0x38>
+    80002b7e:	7e650513          	addi	a0,a0,2022 # 80008360 <states.1757+0x38>
     80002b82:	ffffe097          	auipc	ra,0xffffe
     80002b86:	a0c080e7          	jalr	-1524(ra) # 8000058e <printf>
       plic_complete(irq);
@@ -6034,7 +6034,7 @@ devintr()
     80002c24:	a099                	j	80002c6a <usertrap+0x9c>
     panic("usertrap: not from user mode");
     80002c26:	00005517          	auipc	a0,0x5
-    80002c2a:	75a50513          	addi	a0,a0,1882 # 80008380 <states.1746+0x58>
+    80002c2a:	75a50513          	addi	a0,a0,1882 # 80008380 <states.1757+0x58>
     80002c2e:	ffffe097          	auipc	ra,0xffffe
     80002c32:	916080e7          	jalr	-1770(ra) # 80000544 <panic>
     if(killed(p))
@@ -6063,7 +6063,7 @@ devintr()
     80002c68:	4901                	li	s2,0
     exit("killed");
     80002c6a:	00005517          	auipc	a0,0x5
-    80002c6e:	79650513          	addi	a0,a0,1942 # 80008400 <states.1746+0xd8>
+    80002c6e:	79650513          	addi	a0,a0,1942 # 80008400 <states.1757+0xd8>
     80002c72:	fffff097          	auipc	ra,0xfffff
     80002c76:	52c080e7          	jalr	1324(ra) # 8000219e <exit>
   if(which_dev == 2)
@@ -6081,7 +6081,7 @@ devintr()
     80002c92:	8082                	ret
       exit("syscall error");
     80002c94:	00005517          	auipc	a0,0x5
-    80002c98:	70c50513          	addi	a0,a0,1804 # 800083a0 <states.1746+0x78>
+    80002c98:	70c50513          	addi	a0,a0,1804 # 800083a0 <states.1757+0x78>
     80002c9c:	fffff097          	auipc	ra,0xfffff
     80002ca0:	502080e7          	jalr	1282(ra) # 8000219e <exit>
     80002ca4:	bf71                	j	80002c40 <usertrap+0x72>
@@ -6090,7 +6090,7 @@ devintr()
     printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);
     80002caa:	5890                	lw	a2,48(s1)
     80002cac:	00005517          	auipc	a0,0x5
-    80002cb0:	70450513          	addi	a0,a0,1796 # 800083b0 <states.1746+0x88>
+    80002cb0:	70450513          	addi	a0,a0,1796 # 800083b0 <states.1757+0x88>
     80002cb4:	ffffe097          	auipc	ra,0xffffe
     80002cb8:	8da080e7          	jalr	-1830(ra) # 8000058e <printf>
   asm volatile("csrr %0, sepc" : "=r" (x) );
@@ -6099,7 +6099,7 @@ devintr()
     80002cc0:	14302673          	csrr	a2,stval
     printf("            sepc=%p stval=%p\n", r_sepc(), r_stval());
     80002cc4:	00005517          	auipc	a0,0x5
-    80002cc8:	71c50513          	addi	a0,a0,1820 # 800083e0 <states.1746+0xb8>
+    80002cc8:	71c50513          	addi	a0,a0,1820 # 800083e0 <states.1757+0xb8>
     80002ccc:	ffffe097          	auipc	ra,0xffffe
     80002cd0:	8c2080e7          	jalr	-1854(ra) # 8000058e <printf>
     setkilled(p);
@@ -6152,17 +6152,17 @@ devintr()
     80002d2e:	8082                	ret
     panic("kerneltrap: not from supervisor mode");
     80002d30:	00005517          	auipc	a0,0x5
-    80002d34:	6d850513          	addi	a0,a0,1752 # 80008408 <states.1746+0xe0>
+    80002d34:	6d850513          	addi	a0,a0,1752 # 80008408 <states.1757+0xe0>
     80002d38:	ffffe097          	auipc	ra,0xffffe
     80002d3c:	80c080e7          	jalr	-2036(ra) # 80000544 <panic>
     panic("kerneltrap: interrupts enabled");
     80002d40:	00005517          	auipc	a0,0x5
-    80002d44:	6f050513          	addi	a0,a0,1776 # 80008430 <states.1746+0x108>
+    80002d44:	6f050513          	addi	a0,a0,1776 # 80008430 <states.1757+0x108>
     80002d48:	ffffd097          	auipc	ra,0xffffd
     80002d4c:	7fc080e7          	jalr	2044(ra) # 80000544 <panic>
     panic("kerneltrap");
     80002d50:	00005517          	auipc	a0,0x5
-    80002d54:	70050513          	addi	a0,a0,1792 # 80008450 <states.1746+0x128>
+    80002d54:	70050513          	addi	a0,a0,1792 # 80008450 <states.1757+0x128>
     80002d58:	ffffd097          	auipc	ra,0xffffd
     80002d5c:	7ec080e7          	jalr	2028(ra) # 80000544 <panic>
   if(which_dev == 2 && myproc() != 0 && myproc()->state == RUNNING)
@@ -6200,7 +6200,7 @@ static uint64 argraw(int n)
     80002d9a:	0497e163          	bltu	a5,s1,80002ddc <argraw+0x58>
     80002d9e:	048a                	slli	s1,s1,0x2
     80002da0:	00005717          	auipc	a4,0x5
-    80002da4:	6e870713          	addi	a4,a4,1768 # 80008488 <states.1746+0x160>
+    80002da4:	6e870713          	addi	a4,a4,1768 # 80008488 <states.1757+0x160>
     80002da8:	94ba                	add	s1,s1,a4
     80002daa:	409c                	lw	a5,0(s1)
     80002dac:	97ba                	add	a5,a5,a4
@@ -6242,7 +6242,7 @@ static uint64 argraw(int n)
     80002dda:	bfe9                	j	80002db4 <argraw+0x30>
   panic("argraw");
     80002ddc:	00005517          	auipc	a0,0x5
-    80002de0:	68450513          	addi	a0,a0,1668 # 80008460 <states.1746+0x138>
+    80002de0:	68450513          	addi	a0,a0,1668 # 80008460 <states.1757+0x138>
     80002de4:	ffffd097          	auipc	ra,0xffffd
     80002de8:	760080e7          	jalr	1888(ra) # 80000544 <panic>
 
@@ -6453,7 +6453,7 @@ void syscall(void)
     80002f4a:	15848613          	addi	a2,s1,344
     80002f4e:	588c                	lw	a1,48(s1)
     80002f50:	00005517          	auipc	a0,0x5
-    80002f54:	51850513          	addi	a0,a0,1304 # 80008468 <states.1746+0x140>
+    80002f54:	51850513          	addi	a0,a0,1304 # 80008468 <states.1757+0x140>
     80002f58:	ffffd097          	auipc	ra,0xffffd
     80002f5c:	636080e7          	jalr	1590(ra) # 8000058e <printf>
             p->pid, p->name, num);
@@ -6471,9 +6471,9 @@ void syscall(void)
     80002f70:	8082                	ret
 
 0000000080002f72 <sys_exit>:
-extern int forkn(int, int*);
-extern int waitall(int*, int*);
-
+// Add function declarations
+extern struct proc* allocproc(void);
+extern void freeproc(struct proc *p);
 
 uint64 sys_exit(void)
 {

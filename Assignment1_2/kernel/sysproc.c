@@ -5,10 +5,14 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
+#include "syscall.h"
 
-extern int forkn(int, int*);
-extern int waitall(int*, int*);
+// extern int forkn(int, int*);
+// extern int waitall(int*, int*);
 
+// Add function declarations
+extern struct proc* allocproc(void);
+extern void freeproc(struct proc *p);
 
 uint64 sys_exit(void)
 {

@@ -16,7 +16,7 @@ int nextpid = 1;
 struct spinlock pid_lock;
 
 extern void forkret(void);
-static void freeproc(struct proc *p);
+void freeproc(struct proc *p);
 struct spinlock wait_lock;
 
 extern char trampoline[]; // trampoline.S
@@ -102,7 +102,7 @@ int allocpid()
 // If found, initialize state required to run in the kernel,
 // and return with p->lock held.
 // If there are no free procs, or a memory allocation fails, return 0.
-static struct proc* allocproc(void)
+struct proc* allocproc(void)
 {
   struct proc *p;
 
@@ -147,7 +147,7 @@ found:
 // free a proc structure and the data hanging from it,
 // including user pages.
 // p->lock must be held.
-static void freeproc(struct proc *p)
+void freeproc(struct proc *p)
 {
   if(p->trapframe)
     kfree((void*)p->trapframe);
@@ -825,8 +825,8 @@ int waitall(int *n, int *statuses) {
       if(pp->parent == p && pp->state == ZOMBIE) {
         found = 1;
         local_statuses[count++] = pp->xstate;
-        freeproc(pp);
         release(&pp->lock);
+        freeproc(pp);
         continue;
       }
       release(&pp->lock);
@@ -847,3 +847,4 @@ int waitall(int *n, int *statuses) {
 
   return 0;
 }
+

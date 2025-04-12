@@ -111,6 +111,10 @@ struct proc {
 };
  
 // After the struct proc definition
-int waitall(int *n, int *statuses);
+int wait(uint64 addr, uint64 msg_addr);
 int forkn(int n, int *pids);
 extern struct spinlock wait_lock;
+extern struct proc proc[NPROC];
+struct proc* allocproc(void);
+void freeproc(struct proc *p);
+int waitall(int *n, int *statuses);
