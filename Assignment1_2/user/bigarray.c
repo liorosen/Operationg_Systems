@@ -1,4 +1,4 @@
-
+/*
 // Correct solutoin - Cant calculate parent :
 #include "kernel/types.h"
 #include "user/user.h"
@@ -131,6 +131,69 @@ int main() {
     exit(0);
   }
   return 0;
+}*/
+
+#include "kernel/types.h"
+#include "user/user.h"
+
+#define SIZE (1 << 16)  // 65536
+#define NUM_CHILDREN 4
+#define CHUNK_SIZE (SIZE / NUM_CHILDREN)
+
+int main() {
+  printf("===> Calling forkn with n = %d\n", NUM_CHILDREN);
+
+  int pids[NUM_CHILDREN];
+  int statuses[NUM_CHILDREN];
+  int n = NUM_CHILDREN;
+
+  int ret = forkn(NUM_CHILDREN, pids);
+
+  if (ret == -1) {
+    printf("forkn failed\n");
+    exit(-1);
+  } else if (ret >= 0 && ret < NUM_CHILDREN) {
+    long long start = ret * CHUNK_SIZE;
+    long long end = (ret + 1) * CHUNK_SIZE;
+    long long sum = 0;
+
+    for (long long i = start + 1; i <= end; i++) {
+      sum += i;
+    }
+
+    for (int i = 0; i < ret; i++) {
+      sleep(50);  // Ensure clear print separation
+    }
+
+    // ✅ Use printf directly instead of manual string building
+    printf("Child %d calculated sum: %d\n", ret, (int)sum);
+    exit((int)sum);
+  } else if (ret == -2) {
+    sleep(100);
+    printf("===> Waiting for children with waitall()\n");
+
+    if (waitall(&n, statuses) < 0) {
+      printf("waitall failed\n");
+      exit(-1);
+    }
+
+    long long total = 0;
+    for (int i = 0; i < n; i++) {
+      total += (long long)statuses[i];
+    }
+
+    printf("===> All %d children finished\n", n);
+    printf("Sum of all children's sums: %lld\n", total);
+
+    long long expected = ((long long)SIZE * (SIZE + 1)) / 2;
+    if (total == expected) {
+      printf("Correct total sum: %lld\n", total);
+    } else {
+      printf("Wrong total sum: %lld (expected %lld)\n", total, expected);
+    }
+
+    exit(0);
+  }
+
+  return 0;
 }
-
-

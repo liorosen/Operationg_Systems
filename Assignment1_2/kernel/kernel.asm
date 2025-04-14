@@ -5307,7 +5307,7 @@ void procdump(void)
 
 // Question 4 added
  //the correct
- int forkn(int n, int *pids) {
+int forkn(int n, int *pids) {
     800026ac:	7119                	addi	sp,sp,-128
     800026ae:	fc86                	sd	ra,120(sp)
     800026b0:	f8a2                	sd	s0,112(sp)
@@ -5395,7 +5395,7 @@ void procdump(void)
 
   return 0; // Parent process will receive 0
 
-}
+} 
     8000274a:	70e6                	ld	ra,120(sp)
     8000274c:	7446                	ld	s0,112(sp)
     8000274e:	74a6                	ld	s1,104(sp)

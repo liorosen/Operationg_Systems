@@ -426,7 +426,7 @@ int wait(uint64 addr, uint64 msg_addr)
             return -1;
           }
 
-          // 🌟 Add this to copy the exit message:
+          // Add this to copy the exit message:
           if(copyout(p->pagetable, msg_addr, pp->exit_msg,
                      strlen(pp->exit_msg) + 1) < 0) {
             release(&pp->lock);
@@ -458,6 +458,7 @@ int wait(uint64 addr, uint64 msg_addr)
     sleep(p, &wait_lock);  //DOC: wait-sleep
   }
 }
+
 
 
 
@@ -701,7 +702,7 @@ void procdump(void)
 
 // Question 4 added
  //the correct
- int forkn(int n, int *pids) {
+int forkn(int n, int *pids) {
   struct proc *p = myproc();
   struct proc *np;
   int i;
@@ -749,7 +750,7 @@ void procdump(void)
 
   return 0; // Parent process will receive 0
 
-}
+} 
 
 
 int waitall(int *n, int *statuses) {
