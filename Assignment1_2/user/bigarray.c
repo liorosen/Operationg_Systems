@@ -140,11 +140,13 @@ int main() {
 #define NUM_CHILDREN 4
 #define CHUNK_SIZE (SIZE / NUM_CHILDREN)
 
+
+
 int main() {
   printf("===> Calling forkn with n = %d\n", NUM_CHILDREN);
 
   int pids[NUM_CHILDREN];
-  int statuses[NUM_CHILDREN];
+  int statuses[NUM_CHILDREN] ;
   int n = NUM_CHILDREN;
 
   int ret = forkn(NUM_CHILDREN, pids);
@@ -162,12 +164,13 @@ int main() {
     }
 
     for (int i = 0; i < ret; i++) {
-      sleep(50);  // Ensure clear print separation
+      sleep(50 * ret);  // let lower-numbered children print first
     }
 
-    // ✅ Use printf directly instead of manual string building
+    //  Use printf directly instead of manual string building
     printf("Child %d calculated sum: %d\n", ret, (int)sum);
-    exit((int)sum);
+    sleep(50 * ret);  // let lower-numbered children print first
+    exit((int)(sum % 32768));  // Limit to 15 bits max
   } else if (ret == -2) {
     sleep(100);
     printf("===> Waiting for children with waitall()\n");
@@ -179,6 +182,7 @@ int main() {
 
     long long total = 0;
     for (int i = 0; i < n; i++) {
+      printf("statuses[%d] = %d\n", i, statuses[i]);
       total += (long long)statuses[i];
     }
 
@@ -197,3 +201,4 @@ int main() {
 
   return 0;
 }
+

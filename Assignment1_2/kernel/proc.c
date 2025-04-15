@@ -727,7 +727,7 @@ int forkn(int n, int *pids) {
     }
 
     *(np->trapframe) = *(p->trapframe);
-    np->trapframe->a0 = i + 1;  // child id
+    np->trapframe->a0 = i ;  // child id
 
     for (int fd = 0; fd < NOFILE; fd++)
       if (p->ofile[fd])
@@ -747,12 +747,75 @@ int forkn(int n, int *pids) {
 
     printf("Successfully created child process %d with PID %d\n", i, np->pid);
   }
-
-  return 0; // Parent process will receive 0
+   
+  return -2; // Parent process will receive 0
 
 } 
 
+int waitall(int *n, int *statuses) {
+  struct proc *p = myproc();
+  int count = 0;
+  int local_statuses[NPROC];
+  int expected_n;
 
+  printf("[waitall] Start waitall syscall\n");
+
+  // Safely copy *n from user space
+  if (copyin(p->pagetable, (char *)&expected_n, (uint64)n, sizeof(int)) < 0) {
+    printf("[waitall] copyin failed for n\n");
+    return -1;
+  }
+
+  acquire(&wait_lock);
+
+  while (1) {
+    int found = 0;
+
+    for (struct proc *pp = proc; pp < &proc[NPROC]; pp++) {
+      acquire(&pp->lock);
+      if (pp->parent == p && pp->state == ZOMBIE) {
+        found = 1;
+        local_statuses[count++] = pp->xstate;
+
+        printf("[waitall] Found zombie child PID %d with xstate = %d\n", pp->pid, pp->xstate);
+
+        release(&pp->lock);
+        freeproc(pp);
+        continue;
+      }
+      release(&pp->lock);
+    }
+
+    if (count >= expected_n || !found)
+      break;
+
+    printf("[waitall] Sleeping... %d statuses collected so far\n", count);
+    sleep(p, &wait_lock);
+  }
+
+  release(&wait_lock);
+
+  printf("[waitall] All children handled, total statuses = %d\n", count);
+
+  // ✅ Copy final count back into *n
+  if (copyout(p->pagetable, (uint64)n, (char *)&count, sizeof(int)) < 0) {
+    printf("[waitall] Failed to copy 'n' to user space\n");
+    return -1;
+  }
+
+  // ✅ Copy statuses array
+  if (copyout(p->pagetable, (uint64)statuses, (char *)local_statuses, sizeof(int) * count) < 0) {
+    printf("[waitall] Failed to copy statuses to user space\n");
+    return -1;
+  }
+
+  printf("[waitall] Successfully copied statuses and count\n");
+  return 0;
+}
+
+
+
+/*Solution
 int waitall(int *n, int *statuses) {
   struct proc *p = myproc();
   int count = 0;
@@ -789,6 +852,65 @@ int waitall(int *n, int *statuses) {
     return -1;
 
   return 0;
+}*/
+
+/*tryy
+
+int
+waitall(uint64 n, uint64 status)
+{
+  struct proc *pp;
+  int havekids;
+  struct proc *p = myproc();
+  int statuses[NPROC];
+  int t = 0;
+  int sumkids=0;
+  
+  acquire(&wait_lock);
+
+  for(;;){
+    // Scan through table looking for exited children.
+    havekids = 0;
+    for(pp = proc; pp < &proc[NPROC]; pp++){
+      if(pp->parent == p){
+        sumkids++;
+        // make sure the child isn't still in exit() or swtch().
+        acquire(&pp->lock);
+
+        havekids = 1;
+        if(pp->state == ZOMBIE){
+          // Found one.
+          statuses[t] = pp->xstate;
+          t++;
+          
+          freeproc(pp);
+          
+        }
+        release(&pp->lock);
+      }
+    }
+
+    // No point waiting if we don't have any children.
+    if(!havekids || killed(p)){
+      
+      return 0;
+    }
+    
+    
+  }
+
+    if (sumkids == t)    {
+      release(&wait_lock);
+      copyout(p->pagetable, n, (char *)0, sizeof(0));
+    }
+    
+
+    
+    // Wait for a child to exit.
+    sleep(p, &wait_lock);  //DOC: wait-sleep
+ 
+
 }
 
 
+*/
