@@ -775,7 +775,8 @@ int waitall(int *n, int *statuses) {
       acquire(&pp->lock);
       if (pp->parent == p && pp->state == ZOMBIE) {
         found = 1;
-        local_statuses[count++] = pp->xstate;
+        //local_statuses[count++] = pp->xstate;
+        local_statuses[count++] = pp->xstatus;
 
         printf("[waitall] Found zombie child PID %d with xstate = %d\n", pp->pid, pp->xstate);
 

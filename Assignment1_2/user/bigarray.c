@@ -168,9 +168,12 @@ int main() {
     }
 
     //  Use printf directly instead of manual string building
+    
     printf("Child %d calculated sum: %d\n", ret, (int)sum);
+    statuses[ret] = (int)sum;
     sleep(50 * ret);  // let lower-numbered children print first
-    exit((int)(sum % 32768));  // Limit to 15 bits max
+    exit_num((int)(sum / CHUNK_SIZE));  // ✅ unique, small, preserves value pattern
+
   } else if (ret == -2) {
     sleep(100);
     printf("===> Waiting for children with waitall()\n");
@@ -183,7 +186,7 @@ int main() {
     long long total = 0;
     for (int i = 0; i < n; i++) {
       printf("statuses[%d] = %d\n", i, statuses[i]);
-      total += (long long)statuses[i];
+      total += (long long)statuses[i] * CHUNK_SIZE;
     }
 
     printf("===> All %d children finished\n", n);
