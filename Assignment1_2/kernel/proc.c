@@ -798,13 +798,13 @@ int waitall(int *n, int *statuses) {
 
   printf("[waitall] All children handled, total statuses = %d\n", count);
 
-  // ✅ Copy final count back into *n
+  //  Copy final count back into *n
   if (copyout(p->pagetable, (uint64)n, (char *)&count, sizeof(int)) < 0) {
     printf("[waitall] Failed to copy 'n' to user space\n");
     return -1;
   }
 
-  // ✅ Copy statuses array
+  // Copy statuses array
   if (copyout(p->pagetable, (uint64)statuses, (char *)local_statuses, sizeof(int) * count) < 0) {
     printf("[waitall] Failed to copy statuses to user space\n");
     return -1;
