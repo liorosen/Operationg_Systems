@@ -1,8 +1,8 @@
 #include "kernel/types.h"
 #include "user/user.h"
 
-#define SIZE (1 << 16)  // 65536
-#define NUM_CHILDREN 4
+#define SIZE (1 << 16)  
+#define NUM_CHILDREN 8
 #define CHUNK_SIZE (SIZE / NUM_CHILDREN)
 
 
@@ -20,8 +20,15 @@ int main() {
     printf("forkn failed\n");
     exit(-1);
   } else if (ret >= 0 && ret < NUM_CHILDREN) {
-    long long start = ret * CHUNK_SIZE;
-    long long end = (ret + 1) * CHUNK_SIZE;
+    // Calculate correct start and end 
+    long long base = SIZE / NUM_CHILDREN;
+    long long rem = SIZE % NUM_CHILDREN;
+
+    long long start = ret * base + (ret < rem ? ret : rem);
+    long long end = start + base + (ret < rem ? 1 : 0);
+
+    // long long start = ret * CHUNK_SIZE;
+    // long long end = (ret + 1) * CHUNK_SIZE;
     long long sum = 0;
 
     for (long long i = start ; i < end; i++) {
